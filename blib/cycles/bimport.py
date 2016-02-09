@@ -29,7 +29,7 @@ from os import path, listdir, makedirs, remove
 from shutil import copyfile, rmtree
 
 from .version import version
-from ..utils import files_equal, archive_sha1, fail, extract
+from ..utils import files_equal, archive_sha1, fail, extract, get_path
 from ..utils import Version, ResourceDir
 from ..exceptions import InvalidBlibFile, BlibVersionError, BlibTypeError
 
@@ -40,13 +40,6 @@ def extract_image(archive, source, destination, path_dict, failed):
         fail(failed, "images", "import image '{}', file is missing".format(source))
         return None
     else:
-        comment = archive.getinfo(source).comment.decode("utf-8")
-        if comment != "":
-            if comment in path_dict:
-                copyfile(path_dict[comment], ipath)
-            else:
-                fail(failed, "images", "import image '{}', file is missing".format(source))
-                return None
         path_dict[source] = ipath
         return ipath
 
@@ -95,8 +88,9 @@ def import_texts(orig, dest, xtxt, txts, failed, archive, txt_dir, txt_paths=Non
                         txt_paths[xtxt.attrib["path"]] = tpath
         
         elif dest == "int": #To internal
+            tpath = get_path(archive, xtxt.attrib["path"])
             try:
-                tfile = archive.open(xtxt.attrib["path"], 'r')
+                tfile = archive.open(tpath, 'r')
             except KeyError:
                 fail(failed, "texts", "import text '{}', file is missing".format(xtxt.attrib["name"]))
             else:
@@ -205,8 +199,9 @@ def build_tree(xnodes, xlinks, tree, resources, txt_embed, txt_dir, blib, script
                             node.script = txt_paths[blib_path]
                             scripts[blib_path] = txt_paths[blib_path]
                         else:
+                            spath = get_path(archive, xnode.attrib["blib_filepath"])
                             try:
-                                sfile = archive.open(xnode.attrib["blib_filepath"], 'r')
+                                sfile = archive.open(spath, 'r')
                             except KeyError:
                                 fail(failed, "scripts", "import script '{}', file is missing".format(blib_path))
                             else:
@@ -441,12 +436,12 @@ def bimport(filepath, resource_path, imgi_import=True, imge_import=True, seq_imp
         xtxts = xres.find("texts")
         xgrps = xres.find("groups")
         tmp_path = ResourceDir("tmp", resource_path)
+        path_dict = {}
         
         #Images
         if ximgs is not None and (imgi_import or imge_import or seq_import or mov_import) and blib:
             img_dir = ResourceDir("images", resource_path)
             hash_dict = None
-            path_dict = {}
             sfv_update = False
             for ximg in ximgs:
                 if ximg.attrib["source"] in {'FILE', 'GENERATED'}:

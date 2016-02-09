@@ -24,7 +24,7 @@
 from binascii import crc32
 from hashlib import sha1
 from os import path, makedirs, listdir
-from shutil import copyfileobj
+from shutil import copyfile, copyfileobj
 from io import BytesIO
 
 class Version(object):
@@ -188,6 +188,16 @@ class ResourceDir(object):
                     self._path = path.join(self._root, "1")
             makedirs(self._path)
 
+def get_path(archive, item):
+    fpath = item
+    while True:
+        comment = archive.getinfo(fpath).comment.decode("utf-8")
+        if comment == "":
+            break
+        else:
+            fpath = comment
+    return fpath
+
 def extract(archive, item, directory):
     """
     Extract item from ZIP archive, without keeping internal ZIP structure.
@@ -201,8 +211,9 @@ def extract(archive, item, directory):
         str: Path to the extracted file.
     """
     
-    src = archive.open(item, 'r')
     d_path = path.join(directory, path.basename(item))
+    s_path = get_path(archive, item)
+    src = archive.open(s_path, 'r')
     dst = open(d_path, 'wb')
     copyfileobj(src, dst)
     src.close()
