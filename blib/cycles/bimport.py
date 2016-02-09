@@ -371,7 +371,6 @@ def bimport(filepath, resource_path, imgi_import=True, imge_import=True, seq_imp
         except ValueError:
             raise InvalidBlibFile("File is broken, missing meta-data")
         
-        file_version = Version(file_version)
         compatible = Version(compatible)
         
         if blibtype == "cycles":

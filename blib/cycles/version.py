@@ -29,5 +29,5 @@ Attributes:
 
 from ..utils import Version
 
-version = Version("0.1.0", "beta")
-compatible = Version("0.1.0", "beta")
+version = Version("0.1.2", "beta")
+compatible = Version("0.1.2", "beta")
