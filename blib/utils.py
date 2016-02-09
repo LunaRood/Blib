@@ -25,6 +25,7 @@ from binascii import crc32
 from hashlib import sha1
 from os import path, makedirs, listdir
 from shutil import copyfileobj
+from io import BytesIO
 
 class Version(object):
     """
@@ -272,6 +273,27 @@ def gen_crc(filepath):
             break
     f.close()
     return crc
+
+def write(archive, source, destination, crcs, is_file):
+    crc = gen_crc(source) if is_file else crc32(source)
+    if crc in crcs:
+        for zpath in crcs[crc]:
+            zfile = archive.open(zpath, 'r')
+            nfile = open(source, 'rb') if is_file else BytesIO(source)
+            if files_equal(zfile, nfile):
+                archive.writestr(destination, b"")
+                archive.getinfo(destination).comment = zpath.encode("utf-8")
+                zfile.close()
+                nfile.close()
+                break
+            zfile.close()
+            nfile.close()
+        else:
+            archive.write(source, destination) if is_file else archive.writestr(destination, source)
+            crcs[crc].append(destination)
+    else:
+        archive.write(source, destination) if is_file else archive.writestr(destination, source)
+        crcs[crc] = [destination]
 
 def is_int(string):
     """

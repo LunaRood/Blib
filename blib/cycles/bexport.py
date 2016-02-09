@@ -24,12 +24,10 @@ import bpy
 import re
 import zipfile as zf
 from os import path, listdir
-from io import BytesIO
-from binascii import crc32
 
 from .version import version, compatible
 from .generate_xml import generate_xml
-from ..utils import files_equal, archive_sha1, gen_crc
+from ..utils import archive_sha1, write
 from ..exceptions import InvalidObject
 
 def file_int(f):
@@ -69,27 +67,6 @@ def find_range(files, val, lower):
             else:
                 return mid - 1
 
-def write_img(archive, source, destination, crcs, packed):
-    crc = crc32(source) if packed else gen_crc(source)
-    if crc in crcs:
-        for zpath in crcs[crc]:
-            zimg = archive.open(zpath, 'r')
-            nimg = BytesIO(source) if packed else open(source, 'rb')
-            if files_equal(zimg, nimg):
-                archive.writestr(destination, b"")
-                archive.getinfo(destination).comment = zpath.encode("utf-8")
-                zimg.close()
-                nimg.close()
-                break
-            zimg.close()
-            nimg.close()
-        else:
-            archive.writestr(destination, source) if packed else archive.write(source, destination)
-            crcs[crc].append(destination)
-    else:
-        archive.writestr(destination, source) if packed else archive.write(source, destination)
-        crcs[crc] = [destination]
-
 def bexport(object, filepath, imgi_export=True, imge_export=True, seq_export=True, mov_export=True,
         txti_export=True, txte_export=True, script_export=True, optimize_file=False, compress=True):
     """
@@ -125,16 +102,16 @@ def bexport(object, filepath, imgi_export=True, imge_export=True, seq_export=Tru
     compression = zf.ZIP_DEFLATED if compress else zf.ZIP_STORED
     archive = zf.ZipFile(filepath, 'w', compression) #Create archive
     archive.writestr('structure.xml', xml) #Write XML to archive
+    crcs = {}
     
     #Write text files to archive
     for txt in txts:
         if "text" in txt:
-            archive.writestr(txt["destination"], txt["text"].as_string().encode("utf-8"))
+            write(archive, txt["text"].as_string().encode("utf-8"), txt["destination"], crcs, False)
         else:
-            archive.write(txt["source"], txt["destination"])
+            write(archive, txt["source"], txt["destination"], crcs, True)
     
     #Write images to archive
-    crcs = {}
     for img in imgs:
         if img["image"].source == 'SEQUENCE':
             ### Image sequence code
@@ -150,21 +127,21 @@ def bexport(object, filepath, imgi_export=True, imge_export=True, seq_export=Tru
             for i in range(start, end + 1):
                 source = path.join(p, files[i] + e)
                 destination = img["destination"] + "/" + files[i] + e
-                write_img(archive, source, destination, crcs, False)
+                write(archive, source, destination, crcs, True)
             
             if not img["destination"] + "/" + bpy.path.basename(img["image"].filepath) in archive.namelist():
                 source = bpy.path.abspath(img["image"].filepath)
                 destination = img["destination"] + "/" + bpy.path.basename(img["image"].filepath)
-                write_img(archive, source, destination, crcs, False)
+                write(archive, source, destination, crcs, True)
         else:
             if img["image"].packed_file is None:
                 source = bpy.path.abspath(img["image"].filepath)
                 destination = img["destination"]
-                write_img(archive, source, destination, crcs, False)
+                write(archive, source, destination, crcs, True)
             else:
                 source = img["image"].packed_file.data
                 destination = img["destination"]
-                write_img(archive, source, destination, crcs, True)
+                write(archive, source, destination, crcs, False)
     
     checksum = archive_sha1(archive)
     
