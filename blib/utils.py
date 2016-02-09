@@ -189,6 +189,17 @@ class ResourceDir(object):
             makedirs(self._path)
 
 def get_path(archive, item):
+    """
+    Resolve reference chain.
+    
+    Args:
+        archive (zipfile.ZipFile): The archive wherein the file is located.
+        item (str): The path to the item inside the archive.
+    
+    Returns:
+        str: Path to the file within the archive.
+    """
+    
     fpath = item
     while True:
         comment = archive.getinfo(fpath).comment.decode("utf-8")
@@ -200,7 +211,7 @@ def get_path(archive, item):
 
 def extract(archive, item, directory):
     """
-    Extract item from ZIP archive, without keeping internal ZIP structure.
+    Extract item from ZIP archive, without keeping internal ZIP structure, and resolving references.
     
     Args:
         archive (zipfile.ZipFile): The archive from which to extract the item.
