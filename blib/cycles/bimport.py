@@ -47,7 +47,7 @@ def import_texts(orig, dest, xtxt, txts, failed, archive, txt_dir, txt_paths=Non
     if orig == "xml": #From XML
         if dest == "ext": #To external
             tpath = path.join(str(txt_dir), xtxt.attrib["name"])
-            tfile = open(tpath, 'w', encoding='utf-8')
+            tfile = open(tpath, 'w', encoding="utf-8")
             tfile.write(xtxt.text)
             tfile.close()
             try:
@@ -90,13 +90,13 @@ def import_texts(orig, dest, xtxt, txts, failed, archive, txt_dir, txt_paths=Non
         elif dest == "int": #To internal
             tpath = get_path(archive, xtxt.attrib["path"])
             try:
-                tfile = archive.open(tpath, 'r')
+                tfile = archive.open(tpath, 'r', encodeing="utf-8")
             except KeyError:
                 fail(failed, "texts", "import text '{}', file is missing".format(xtxt.attrib["name"]))
             else:
                 txt = bpy.data.texts.new(xtxt.attrib["name"])
                 try:
-                    txt.from_string(tfile.read().decode('utf-8'))
+                    txt.from_string(tfile.read())
                 except:
                     bpy.data.texts.remove(txt)
                     fail(failed, "texts", "import text '{}', unknown reason".format(xtxt.attrib["name"]))
@@ -201,13 +201,13 @@ def build_tree(xnodes, xlinks, tree, resources, txt_embed, txt_dir, blib, script
                         else:
                             spath = get_path(archive, xnode.attrib["blib_filepath"])
                             try:
-                                sfile = archive.open(spath, 'r')
+                                sfile = archive.open(spath, 'r', encoding="utf-8")
                             except KeyError:
                                 fail(failed, "scripts", "import script '{}', file is missing".format(blib_path))
                             else:
                                 script = bpy.data.texts.new(bpy.path.basename(blib_path))
                                 try:
-                                    script.from_string(sfile.read().decode('utf-8'))
+                                    script.from_string(sfile.read())
                                 except:
                                     bpy.data.texts.remove(script)
                                     fail(failed, "scripts", "import script '{}', unknown reason".format(blib_path))
@@ -498,7 +498,7 @@ def bimport(filepath, resource_path, imgi_import=True, imge_import=True, seq_imp
                                 hash_dict = {}
                                 if path.isfile(hash_path):
                                     sfv = re.compile(r"(.*) (.*?)$")
-                                    hash_file = open(hash_path, 'r', encoding='utf-8')
+                                    hash_file = open(hash_path, 'r', encoding="utf-8")
                                     for line in hash_file:
                                         key = sfv.sub(r"\2", line).strip()
                                         val = sfv.sub(r"\1", line).strip()
@@ -591,7 +591,7 @@ def bimport(filepath, resource_path, imgi_import=True, imge_import=True, seq_imp
             #Update hash file if list has changed
             if hash_dict is not None and (hash_dict != hash_bkp or sfv_update):
                 hash_path = path.join(img_dir.root, "list.sfv")
-                hash_file = open(hash_path, 'w', encoding='utf-8')
+                hash_file = open(hash_path, 'w', encoding="utf-8")
                 for key in hash_dict:
                     for val in hash_dict[key]:
                         hash_file.write(val + " " + key + "\n")
