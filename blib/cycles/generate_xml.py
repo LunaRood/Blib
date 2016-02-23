@@ -175,12 +175,17 @@ def generate_xml(object, imgi_export=True, imge_export=True, seq_export=True, mo
         image_list (list[dict]): list containing the images to be exported, in format:
             list(dict{
                 "image" (bpy.types.Image): Image data block,
-                "destination" (str): Relative path to be saved in .blib file,
+                "destination" (str): Path to which the image should be saved in .blib file,
                 "range" (tuple): Only included if image.source equals 'SEQUENCE',
                     tuple[0]: Sequence start frame.
                     tuple[1]: Sequence end frame.
                 })
-        text_list (list[dict])
+        text_list (list[dict]): list containing the texts to be exported, in format:
+            list(dict{
+                "text" (bpy.types.text): Text data block (only included for texts, and not for expernal scripts),
+                "source" (str): Path to the text file (empty string when text is internal),
+                "destination" (str): Path to which the text should be saved in .blib file,
+                })
     
     Raises:
         blib.exeptions.InvalidObject: If the object argument is not a Cycles material or node tree.

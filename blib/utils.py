@@ -313,7 +313,7 @@ def write(archive, source, destination, crcs, is_file):
     Args:
         archive (zipfile.ZipFile): The archive to which to write the data.
         source (str or bytes): The path to the file to be written or the data itself.
-        destination (str): The path withing the archive to which the data should written.
+        destination (str): The path within the archive to which the data should written.
         crcs (dict): A dictionary containing crc32 hashes to all files in archive.
             Can be passed as an empty dictionary.
             Same dict should be passed every time you write to the same archive.
