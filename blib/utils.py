@@ -269,6 +269,16 @@ def files_equal(file1, file2):
             return True
 
 def archive_sha1(archive):
+    """
+    Generate sha1 hash from crc32 hashes of all files in archive.
+    
+    Args:
+        archive (zipfile.ZipFile): The archive for which to generate the hash.
+    
+    Returns:
+        hashlib.sha1: The resulting hash object.
+    """
+    
     checksum = sha1()
     for obj in archive.infolist():
         checksum.update(bytes([int(i) for i in str(obj.CRC)]))
@@ -297,6 +307,20 @@ def gen_crc(filepath):
     return crc
 
 def write(archive, source, destination, crcs, is_file):
+    """
+    Write data to archive, while only making a link if identical data is already in archive.
+    
+    Args:
+        archive (zipfile.ZipFile): The archive to which to write the data.
+        source (str or bytes): The path to the file to be written or the data itself.
+        destination (str): The path withing the archive to which the data should written.
+        crcs (dict): A dictionary containing crc32 hashes to all files in archive.
+            Can be passed as an empty dictionary.
+            Same dict should be passed every time you write to the same archive.
+        is_file (bool): Wether "source" is a path to a file or the data to be written itself.
+            Should be true if "source" is a filepath, and "False" if it is the data.
+    """
+    
     crc = gen_crc(source) if is_file else crc32(source)
     if crc in crcs:
         for zpath in crcs[crc]:
