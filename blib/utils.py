@@ -306,20 +306,30 @@ def gen_crc(filepath):
     f.close()
     return crc
 
-def write(archive, source, destination, crcs, is_file):
+def write(archive, source, destination, crcs):
     """
     Write data to archive, while only making a link if identical data is already in archive.
     
     Args:
         archive (zipfile.ZipFile): The archive to which to write the data.
         source (str or bytes): The path to the file to be written or the data itself.
+            If source is 'str', it is interpreted as a file path.
+            If source is 'bytes', it is interpreted as data to be written directly.
         destination (str): The path within the archive to which the data should written.
         crcs (dict): A dictionary containing crc32 hashes to all files in archive.
             Can be passed as an empty dictionary.
             Same dict should be passed every time you write to the same archive.
-        is_file (bool): Wether "source" is a path to a file or the data to be written itself.
-            Should be true if "source" is a filepath, and "False" if it is the data.
+    
+    Raises:
+        TypeError: If the 'source' argument is not a 'str' or 'bytes' object.
     """
+    
+    if isinstance(source, str):
+        is_file = True
+    elif isinstance(source, bytes):
+        isfile = False
+    else:
+        raise TypeError("source should be of type 'str' or 'bytes', not '{}'".format(type(source).__name__))
     
     crc = gen_crc(source) if is_file else crc32(source)
     if crc in crcs:
