@@ -186,7 +186,8 @@ class ResourceDir(object):
                     self._path = path.join(self._root, dir_name)
                 else:
                     self._path = path.join(self._root, "1")
-            makedirs(self._path)
+            if not path.isdir(self._path):
+                makedirs(self._path)
 
 def get_path(archive, item):
     """
