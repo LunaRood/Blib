@@ -327,7 +327,7 @@ def write(archive, source, destination, crcs):
     if isinstance(source, str):
         is_file = True
     elif isinstance(source, bytes):
-        isfile = False
+        is_file = False
     else:
         raise TypeError("source should be of type 'str' or 'bytes', not '{}'".format(type(source).__name__))
     
