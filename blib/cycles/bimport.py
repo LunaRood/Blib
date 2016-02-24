@@ -57,7 +57,7 @@ def import_texts(orig, dest, xtxt, txts, failed, archive, txt_dir, txt_paths=Non
             else:
                 txts[xtxt.attrib["name"]] = txt
                 if txt_paths is not None:
-                        txt_paths[xtxt.attrib["path"]] = tpath
+                    txt_paths[xtxt.attrib["path"]] = tpath
         
         elif dest == "int": #To internal
             txt = bpy.data.texts.new(xtxt.attrib["name"])
@@ -69,7 +69,7 @@ def import_texts(orig, dest, xtxt, txts, failed, archive, txt_dir, txt_paths=Non
             else:
                 txts[xtxt.attrib["name"]] = txt
                 if txt_paths is not None:
-                        txt_paths[xtxt.attrib["path"]] = txt
+                    txt_paths[xtxt.attrib["path"]] = txt
     
     elif orig == "zip": #From Zip
         if dest == "ext":  #To external
