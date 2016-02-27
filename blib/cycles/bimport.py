@@ -318,14 +318,14 @@ def build_tree(xnodes, xlinks, tree, resources, txt_embed, txt_dir, blib, script
             for o_i, xout in enumerate(xouts):
                 set_attributes(node.outputs[o_i], xout, failed)
 
-def bimport(filepath, resource_path, imgi_import=True, imge_import=True, seq_import=True, mov_import=True, txti_import=True, txte_import=True,
+def bimport(filepath, resource_path=None, imgi_import=True, imge_import=True, seq_import=True, mov_import=True, txti_import=True, txte_import=True,
             script_import=True, img_embed=False, txt_embed=None, skip_sha1=False, img_merge=True):
     """
     Import a Cycles material or node group from a .blib or .xml file.
     
     Args:
         filepath (str): Path to .blib or .xml file.
-        resource_path (str): Path to save external resources.
+        resource_path (str or None): Custom path to save external resources or None to keep the default path.
         imgi_import (bool): Import images that were packed in .blend file.
         imge_import (bool): Import images that were externally saved.
         seq_import (bool): Import image sequences.
