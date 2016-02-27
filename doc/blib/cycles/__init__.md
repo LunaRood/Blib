@@ -37,12 +37,12 @@ has to be Cycles object, no other renderers supported\.
 
 ---
 
-* <a id="function-cycles-bimport"></a>*function* cycles\.**bimport(**<i>filepath, resource\_path, imgi\_import=True, imge\_import=True, seq\_import=True, mov\_import=True, txti\_import=True, txte\_import=True, script\_import=True, img\_embed=False, txt\_embed=None, skip\_sha1=False, img\_merge=True</i>**)**  
+* <a id="function-cycles-bimport"></a>*function* cycles\.**bimport(**<i>filepath, resource\_path=None, imgi\_import=True, imge\_import=True, seq\_import=True, mov\_import=True, txti\_import=True, txte\_import=True, script\_import=True, img\_embed=False, txt\_embed=None, skip\_sha1=False, img\_merge=True</i>**)**  
   Import a Cycles material or node group from a \.blib or \.xml file\.  
 
   **Arguments:**
   * <code>**filepath** \(*str*\)</code>: Path to \.blib or \.xml file\.
-  * <code>**resource\_path** \(*str*\)</code>: Path to save external resources\.
+  * <code>**resource\_path** \(*str* or *None*\)</code>: Custom path to save external resources or None to keep the default path\.
   * <code>**imgi\_import** \(*bool*\)</code>: Import images that were packed in \.blend file\.
   * <code>**imge\_import** \(*bool*\)</code>: Import images that were externally saved\.
   * <code>**seq\_import** \(*bool*\)</code>: Import image sequences\.
