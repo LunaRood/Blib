@@ -87,7 +87,7 @@ def bexport(object, filepath, imgi_export=True, imge_export=True, seq_export=Tru
         compress (bool): Use compression on the zip container.
     
     Raises:
-        blib.exeptions.InvalidObject: If the object argument is not a Cycles material or node tree.
+        blib.exeptions.InvalidObject: If the 'object' argument is not a Cycles material or node tree.
     """
     
     if isinstance(object, bpy.types.Material):
@@ -107,9 +107,9 @@ def bexport(object, filepath, imgi_export=True, imge_export=True, seq_export=Tru
     #Write text files to archive
     for txt in txts:
         if "text" in txt:
-            write(archive, txt["text"].as_string().encode("utf-8"), txt["destination"], crcs, False)
+            write(archive, txt["text"].as_string().encode("utf-8"), txt["destination"], crcs)
         else:
-            write(archive, txt["source"], txt["destination"], crcs, True)
+            write(archive, txt["source"], txt["destination"], crcs)
     
     #Write images to archive
     for img in imgs:
@@ -127,21 +127,21 @@ def bexport(object, filepath, imgi_export=True, imge_export=True, seq_export=Tru
             for i in range(start, end + 1):
                 source = path.join(p, files[i] + e)
                 destination = img["destination"] + "/" + files[i] + e
-                write(archive, source, destination, crcs, True)
+                write(archive, source, destination, crcs)
             
             if not img["destination"] + "/" + bpy.path.basename(img["image"].filepath) in archive.namelist():
                 source = bpy.path.abspath(img["image"].filepath)
                 destination = img["destination"] + "/" + bpy.path.basename(img["image"].filepath)
-                write(archive, source, destination, crcs, True)
+                write(archive, source, destination, crcs)
         else:
             if img["image"].packed_file is None:
                 source = bpy.path.abspath(img["image"].filepath)
                 destination = img["destination"]
-                write(archive, source, destination, crcs, True)
+                write(archive, source, destination, crcs)
             else:
                 source = img["image"].packed_file.data
                 destination = img["destination"]
-                write(archive, source, destination, crcs, False)
+                write(archive, source, destination, crcs)
     
     checksum = archive_sha1(archive)
     

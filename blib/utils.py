@@ -186,7 +186,8 @@ class ResourceDir(object):
                     self._path = path.join(self._root, dir_name)
                 else:
                     self._path = path.join(self._root, "1")
-            makedirs(self._path)
+            if not path.isdir(self._path):
+                makedirs(self._path)
 
 def get_path(archive, item):
     """
@@ -269,6 +270,16 @@ def files_equal(file1, file2):
             return True
 
 def archive_sha1(archive):
+    """
+    Generate sha1 hash from crc32 hashes of all files in archive.
+    
+    Args:
+        archive (zipfile.ZipFile): The archive for which to generate the hash.
+    
+    Returns:
+        hashlib.sha1: The resulting hash object.
+    """
+    
     checksum = sha1()
     for obj in archive.infolist():
         checksum.update(bytes([int(i) for i in str(obj.CRC)]))
@@ -296,7 +307,31 @@ def gen_crc(filepath):
     f.close()
     return crc
 
-def write(archive, source, destination, crcs, is_file):
+def write(archive, source, destination, crcs):
+    """
+    Write data to archive, while only making a link if identical data is already in archive.
+    
+    Args:
+        archive (zipfile.ZipFile): The archive to which to write the data.
+        source (str or bytes): The path to the file to be written or the data itself.
+            If source is 'str', it is interpreted as a file path.
+            If source is 'bytes', it is interpreted as data to be written directly.
+        destination (str): The path within the archive to which the data should written.
+        crcs (dict): A dictionary containing crc32 hashes to all files in archive.
+            Can be passed as an empty dictionary.
+            Same dict should be passed every time you write to the same archive.
+    
+    Raises:
+        TypeError: If the 'source' argument is not a 'str' or 'bytes' object.
+    """
+    
+    if isinstance(source, str):
+        is_file = True
+    elif isinstance(source, bytes):
+        is_file = False
+    else:
+        raise TypeError("source should be of type 'str' or 'bytes', not '{}'".format(type(source).__name__))
+    
     crc = gen_crc(source) if is_file else crc32(source)
     if crc in crcs:
         for zpath in crcs[crc]:
