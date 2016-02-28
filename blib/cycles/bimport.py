@@ -24,7 +24,7 @@ import bpy
 import re
 import zipfile as zf
 import xml.etree.cElementTree as ET
-from ast import literal_eval as parse
+from ast import literal_eval
 from os import path, listdir, makedirs, remove
 from shutil import copyfile, rmtree
 
@@ -112,7 +112,7 @@ def set_attributes(object, xelement, failed):
            not (attr == "name" and isinstance(object, bpy.types.Material)) and \
            not (attr == "mode" and isinstance(object, bpy.types.ShaderNodeScript)):
             try:
-                val = parse(xelement.attrib[attr])
+                val = literal_eval(xelement.attrib[attr])
             except (ValueError, SyntaxError):
                 val = xelement.attrib[attr]
             
@@ -250,7 +250,7 @@ def build_tree(xnodes, xlinks, tree, resources, txt_embed, txt_dir, blib, script
                 set_attributes(node.image_user, ximageuser, failed)
         elif hasattr(node, "mapping") and hasattr(node.mapping, "curves"):
             xcurvedata = xnode.find("curve_data")
-            curvedata = parse(xcurvedata.text)
+            curvedata = literal_eval(xcurvedata.text)
             for c_i, curve in enumerate(curvedata):
                 for p_i, point in enumerate(curve):
                     if p_i == 0 or p_i == len(curve) - 1:
@@ -262,7 +262,7 @@ def build_tree(xnodes, xlinks, tree, resources, txt_embed, txt_dir, blib, script
             node.mapping.update()
         elif hasattr(node, "color_ramp"):
             xrampdata = xnode.find("ramp_data")
-            rampdata = parse(xrampdata.text)
+            rampdata = literal_eval(xrampdata.text)
             set_attributes(node.color_ramp, xrampdata, failed)
             for e_i, element in enumerate(rampdata):
                 if e_i == 0 or e_i == len(rampdata) - 1:
