@@ -27,6 +27,7 @@ from os import path, listdir
 
 from .version import version, compatible
 from .generate_xml import generate_xml
+from .utils import check_asset
 from ..utils import archive_sha1, write
 from ..exceptions import InvalidObject
 
@@ -90,11 +91,7 @@ def bexport(object, filepath, imgi_export=True, imge_export=True, seq_export=Tru
         blib.exeptions.InvalidObject: If the 'object' argument is not a Cycles material or node tree.
     """
     
-    if isinstance(object, bpy.types.Material):
-        if object.use_nodes == False:
-            raise InvalidObject("Material can't be exported, contains no node tree.")
-    elif isinstance(object, bpy.types.ShaderNodeTree):
-        raise InvalidObject("Object passed is not a material or node group")
+    check_asset(object)
     
     filepath = bpy.path.abspath(filepath) #Ensure path is absolute
     xml, imgs, txts = generate_xml(object, imgi_export, imge_export, seq_export, mov_export, txti_export,

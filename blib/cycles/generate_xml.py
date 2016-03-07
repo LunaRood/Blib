@@ -25,6 +25,7 @@ import xml.etree.cElementTree as ET
 from os import path
 
 from .version import version, compatible
+from .utils import check_asset
 from ..exceptions import InvalidObject
 from ..utils import fail
 
@@ -191,17 +192,14 @@ def generate_xml(object, imgi_export=True, imge_export=True, seq_export=True, mo
         blib.exeptions.InvalidObject: If the 'object' argument is not a Cycles material or node tree.
     """
     
+    check_asset(object)
+    
     if isinstance(object, bpy.types.Material):
-        if object.use_nodes == False:
-            raise InvalidObject("Material can't be exported, contains no node tree.")
-        
         groups = [object.node_tree]
         ngroups = []
     elif isinstance(object, bpy.types.ShaderNodeTree):
         groups = [object]
         ngroups = [object]
-    else:
-        raise InvalidObject("Object passed is not a material or node group")
     
     img_export = True if imgi_export or imge_export or seq_export or mov_export else False
     txt_export = True if txti_export or txte_export else False
