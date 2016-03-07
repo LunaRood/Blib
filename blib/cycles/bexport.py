@@ -91,7 +91,7 @@ def bexport(object, filepath, imgi_export=True, imge_export=True, seq_export=Tru
         blib.exeptions.InvalidObject: If the 'object' argument is not a Cycles material or node tree.
     """
     
-    check_asset(object)
+    check_asset(object, True)
     
     filepath = bpy.path.abspath(filepath) #Ensure path is absolute
     xml, imgs, txts = generate_xml(object, imgi_export, imge_export, seq_export, mov_export, txti_export,

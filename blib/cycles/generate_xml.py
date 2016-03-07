@@ -192,7 +192,7 @@ def generate_xml(object, imgi_export=True, imge_export=True, seq_export=True, mo
         blib.exeptions.InvalidObject: If the 'object' argument is not a Cycles material or node tree.
     """
     
-    check_asset(object)
+    check_asset(object, True)
     
     if isinstance(object, bpy.types.Material):
         groups = [object.node_tree]

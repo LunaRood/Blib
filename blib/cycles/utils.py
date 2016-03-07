@@ -22,19 +22,23 @@ import bpy
 
 from ..exceptions import InvalidObject
 
-def check_asset(asset):
+def check_asset(asset, do_raise=False):
     """
     Check if asset is a Cycles material or node group,
     and thus is exportable by the 'cycles' package.
     
     Args:
         asset (any type): Asset to be checked for validity.
+        do_raise (bool): If True, an exception is raised for invalid assets,
+            instead of returning False.
     
     Returns:
-        bool: True if check is passed
+        bool: True if check is passed, otherwise returns False.
+        Note that False is only ever returned if 'do_raise' is False,
+        otherwise an exception is raised instead.
     
     Raises:
-        blib.exeptions.InvalidObject: If the check fails.
+        blib.exeptions.InvalidObject: If the check fails and 'do_raise' is True.
     """
     
     if asset:
@@ -42,20 +46,32 @@ def check_asset(asset):
             if asset.use_nodes:
                 tree = asset.node_tree
             else:
-                raise InvalidObject("Material can't be exported, contains no node tree.")
+                if do_raise:
+                    raise InvalidObject("Material can't be exported, contains no node tree.")
+                else:
+                    return False
         elif isinstance(asset, bpy.types.ShaderNodeTree):
             if asset.type == 'SHADER':
                 tree = asset
             else:
-                raise InvalidObject("Node tree is not of SHADER type.")
+                if do_raise:
+                    raise InvalidObject("Node tree is not of SHADER type.")
+                else:
+                    return False
         else:
-            raise InvalidObject("Object passed is not a material or node group.")
+            if do_raise:
+                raise InvalidObject("Object passed is not a material or node group.")
+            else:
+                return False
         
         groups = [tree]
         while groups:
             for node in groups.pop(0).nodes:
                 if 'NEW_SHADING' not in node.shading_compatibility:
-                    raise InvalidObject("Node tree contains non Cycles nodes.")
+                    if do_raise:
+                        raise InvalidObject("Node tree contains non Cycles nodes.")
+                    else:
+                        return False
                 
                 if node.bl_static_type == 'GROUP':
                     groups.append(node.node_tree)
