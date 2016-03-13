@@ -20,6 +20,7 @@
 
 import bpy
 
+import xml.etree.cElementTree as ET
 from ..exceptions import InvalidObject
 
 def check_asset(asset, do_raise=False):
@@ -76,3 +77,34 @@ def check_asset(asset, do_raise=False):
                 if node.bl_static_type == 'GROUP':
                     groups.append(node.node_tree)
     return True
+
+def get_sub_type(archive):
+    """
+    Get the subtype of a 'cycles' type Blib file.
+    
+    Args:
+        archive (zipfile.ZipFile): The archive to be checked.
+    
+    Returns:
+        str or None
+        A string containing the Blib sub-type is returned,
+        if no valid sub-type is found, None is returned.
+    """
+    
+    try:
+        xml_file = archive.open("structure.xml", 'r')
+    except KeyError:
+        return None
+    
+    tree = ET.ElementTree(file=xml_file)
+    xml_file.close()
+    xroot = tree.getroot()
+    if xroot.tag != "blib":
+        return None
+    if xroot.attrib["type"] != "cycles":
+        return None
+    if xroot.find("main") is not None:
+        return "mat"
+    if xroot.find("resources") is not None:
+        return "grp"
+    return None
