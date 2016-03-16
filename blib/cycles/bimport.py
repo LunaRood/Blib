@@ -106,20 +106,20 @@ def import_texts(orig, dest, xtxt, txts, failed, archive, txt_dir, txt_paths=Non
                         txt_paths[xtxt.attrib["path"]] = txt
                 tfile.close()
 
-def set_attributes(object, xelement, failed):
+def set_attributes(asset, xelement, failed):
     for attr in xelement.attrib:
         if not attr.startswith("blib_") and \
-           not (attr == "name" and isinstance(object, bpy.types.Material)) and \
-           not (attr == "mode" and isinstance(object, bpy.types.ShaderNodeScript)):
+           not (attr == "name" and isinstance(asset, bpy.types.Material)) and \
+           not (attr == "mode" and isinstance(asset, bpy.types.ShaderNodeScript)):
             try:
                 val = literal_eval(xelement.attrib[attr])
             except (ValueError, SyntaxError):
                 val = xelement.attrib[attr]
             
             try:
-                setattr(object, attr, val)
+                setattr(asset, attr, val)
             except:
-                fail(failed, "attributes", "set attribute '{}' on object '{}'".format(attr, object.name))
+                fail(failed, "attributes", "set attribute '{}' on object '{}'".format(attr, asset.name))
 
 def make_sockets(tree, inp, out, xinpn, xoutn):
     types = ('VALUE', 'INT', 'BOOLEAN', 'VECTOR', 'STRING', 'RGBA', 'SHADER')

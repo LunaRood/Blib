@@ -46,16 +46,16 @@ def indent(elem, level=0):
             elem.tail = i
 ##### End of pretty print code #####
 
-def set_attributes(object, xelement, optimize_file):
-    attrs = [attr for attr in dir(object) if not attr.startswith("__") and not attr.startswith("bl_") and type(getattr(object, attr)).__module__ == "builtins"]
+def set_attributes(asset, xelement, optimize_file):
+    attrs = [attr for attr in dir(asset) if not attr.startswith("__") and not attr.startswith("bl_") and type(getattr(asset, attr)).__module__ == "builtins"]
     for attr in attrs:
-        if not (attr == "node_tree" and hasattr(object, "type") and object.type == 'GROUP') and \
-           not (attr in {"filepath", "script"} and hasattr(object, "type") and object.type == 'SCRIPT') and \
-           not (attr == "text" and hasattr(object, "type") and object.type == 'FRAME') and \
-           not (attr == "image" and hasattr(object, "image_user")):
-            val = getattr(object, attr)
+        if not (attr == "node_tree" and hasattr(asset, "type") and asset.type == 'GROUP') and \
+           not (attr in {"filepath", "script"} and hasattr(asset, "type") and asset.type == 'SCRIPT') and \
+           not (attr == "text" and hasattr(asset, "type") and asset.type == 'FRAME') and \
+           not (attr == "image" and hasattr(asset, "image_user")):
+            val = getattr(asset, attr)
             try:
-                setattr(object, attr, val)
+                setattr(asset, attr, val)
             except AttributeError:
                 pass
             else:
@@ -71,28 +71,28 @@ def set_attributes(object, xelement, optimize_file):
                         xelement.set(attr, str(val))
     return
 
-def set_io(object, xelement, optimize_file):
-    if len(object.inputs) > 0:
+def set_io(asset, xelement, optimize_file):
+    if len(asset.inputs) > 0:
         xins = ET.SubElement(xelement, "inputs")
-        for inp in object.inputs:
+        for inp in asset.inputs:
             if inp.identifier == '__extend__':
                 break
             xin = ET.SubElement(xins, "input")
             set_attributes(inp, xin, optimize_file)
     
-    if len(object.outputs) > 0:
+    if len(asset.outputs) > 0:
         xouts = ET.SubElement(xelement, "outputs")
-        for out in object.outputs:
+        for out in asset.outputs:
             if out.identifier == '__extend__':
                 break
             xout = ET.SubElement(xouts, "output")
             set_attributes(out, xout, optimize_file)
     return
 
-def set_nodes(object, xelement, images, script_export, scr_paths, textnames, optimize_file):
-    if len(object.nodes) > 0:
+def set_nodes(asset, xelement, images, script_export, scr_paths, textnames, optimize_file):
+    if len(asset.nodes) > 0:
         xnodes = None
-        for node in object.nodes:
+        for node in asset.nodes:
             if xnodes == None:
                 xnodes = ET.SubElement(xelement, "nodes")
             
@@ -134,10 +134,10 @@ def set_nodes(object, xelement, images, script_export, scr_paths, textnames, opt
                 xrampdata.text = str(rampdata)
     return
 
-def set_links(object, xelement):
-    if len(object.links) > 0:
+def set_links(asset, xelement):
+    if len(asset.links) > 0:
         xlinks = ET.SubElement(xelement, "links")
-        for link in object.links:
+        for link in asset.links:
             f_index = list(link.from_node.outputs).index(link.from_socket)
             t_index = list(link.to_node.inputs).index(link.to_socket)
             xlink = ET.SubElement(xlinks, "link")
@@ -147,13 +147,13 @@ def set_links(object, xelement):
             xlink.set("to_socket", str(t_index))
     return
 
-def generate_xml(object, imgi_export=True, imge_export=True, seq_export=True, mov_export=True, txti_export=True, txte_export=True,
+def generate_xml(asset, imgi_export=True, imge_export=True, seq_export=True, mov_export=True, txti_export=True, txte_export=True,
             script_export=True, optimize_file=False, blib=False, txt_embed=False, pretty_print=False):
     """
     Generate XML representing a Cycles material or node group as per the Blib standard.
     
     Args:
-        object (bpy.types.Material or bpy.types.ShaderNodeTree): The object to be exported,
+        asset (bpy.types.Material or bpy.types.ShaderNodeTree): The asset to be exported,
             has to be Cycles object, no other renderers supported.
         imgi_export (bool): Export images that are packed in .blend file.
         imge_export (bool): Export images that are externally saved.
@@ -189,17 +189,17 @@ def generate_xml(object, imgi_export=True, imge_export=True, seq_export=True, mo
                 })
     
     Raises:
-        blib.exeptions.InvalidObject: If the 'object' argument is not a Cycles material or node tree.
+        blib.exeptions.InvalidObject: If the 'asset' argument is not a Cycles material or node tree.
     """
     
-    check_asset(object, True)
+    check_asset(asset, True)
     
-    if isinstance(object, bpy.types.Material):
-        groups = [object.node_tree]
+    if isinstance(asset, bpy.types.Material):
+        groups = [asset.node_tree]
         ngroups = []
-    elif isinstance(object, bpy.types.ShaderNodeTree):
-        groups = [object]
-        ngroups = [object]
+    elif isinstance(asset, bpy.types.ShaderNodeTree):
+        groups = [asset]
+        ngroups = [asset]
     
     img_export = True if imgi_export or imge_export or seq_export or mov_export else False
     txt_export = True if txti_export or txte_export else False
@@ -390,19 +390,19 @@ def generate_xml(object, imgi_export=True, imge_export=True, seq_export=True, mo
                 set_links(grp, xgrp)
     
     #Export material
-    if isinstance(object, bpy.types.Material):
+    if isinstance(asset, bpy.types.Material):
         xmat = ET.SubElement(xroot, "main")
-        xmat.set("name", object.name)
-        xmat.set("diffuse_color", str(list(object.diffuse_color)))
-        xmat.set("specular_color", str(list(object.specular_color)))
-        xmat.set("alpha", str(object.alpha))
-        xmat.set("specular_hardness", str(object.specular_hardness))
-        xmat.set("pass_index", str(object.pass_index))
+        xmat.set("name", asset.name)
+        xmat.set("diffuse_color", str(list(asset.diffuse_color)))
+        xmat.set("specular_color", str(list(asset.specular_color)))
+        xmat.set("alpha", str(asset.alpha))
+        xmat.set("specular_hardness", str(asset.specular_hardness))
+        xmat.set("pass_index", str(asset.pass_index))
         
         xcycles = ET.SubElement(xmat, "cycles_settings")
-        set_attributes(object.cycles, xcycles, optimize_file)
-        set_nodes(object.node_tree, xmat, images, script_export, scr_rel_paths, textnames, optimize_file)
-        set_links(object.node_tree, xmat)
+        set_attributes(asset.cycles, xcycles, optimize_file)
+        set_nodes(asset.node_tree, xmat, images, script_export, scr_rel_paths, textnames, optimize_file)
+        set_links(asset.node_tree, xmat)
     
     #Generate image list
     imagelist = []
