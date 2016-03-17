@@ -6,6 +6,7 @@ Cycles export/import as per the Blib standard\.
 
 ##Index
 ####Modules
+* <code>cycles\.[**utils**](utils.md)</code>
 * <code>cycles\.[**version**](version.md)</code>
 
 ####[Functions](#functions-1)
@@ -14,11 +15,11 @@ Cycles export/import as per the Blib standard\.
 * <code>cycles\.[**generate\_xml**](#function-cycles-generate_xml)</code>
 
 ##Functions
-* <a id="function-cycles-bexport"></a>*function* cycles\.**bexport(**<i>object, filepath, imgi\_export=True, imge\_export=True, seq\_export=True, mov\_export=True, txti\_export=True, txte\_export=True, script\_export=True, optimize\_file=False, compress=True</i>**)**  
+* <a id="function-cycles-bexport"></a>*function* cycles\.**bexport(**<i>asset, filepath, imgi\_export=True, imge\_export=True, seq\_export=True, mov\_export=True, txti\_export=True, txte\_export=True, script\_export=True, optimize\_file=False, compress=True</i>**)**  
   Export a Cycles material or node group to a \.blib file\.  
 
   **Arguments:**
-  * <code>**object** \(*bpy\.types\.Material* or *bpy\.types\.ShaderNodeTree*\)</code>: The object to be exported,
+  * <code>**asset** \(*bpy\.types\.Material* or *bpy\.types\.ShaderNodeTree*\)</code>: The asset to be exported,
 has to be Cycles object, no other renderers supported\.
   * <code>**filepath** \(*str*\)</code>: Path to save the file\.
   * <code>**imgi\_export** \(*bool*\)</code>: Export images that are packed in \.blend file\.
@@ -32,7 +33,7 @@ has to be Cycles object, no other renderers supported\.
   * <code>**compress** \(*bool*\)</code>: Use compression on the zip container\.
 
   **Raises:**
-  * <code>**blib\.exeptions\.InvalidObject**</code>: If the 'object' argument is not a Cycles material or node tree\.
+  * <code>**blib\.exeptions\.InvalidObject**</code>: If the 'asset' argument is not a Cycles material or node tree\.
 
 
 ---
@@ -72,11 +73,11 @@ resources, use the existing image instead of creating a new instance\.
 
 ---
 
-* <a id="function-cycles-generate_xml"></a>*function* cycles\.**generate\_xml(**<i>object, imgi\_export=True, imge\_export=True, seq\_export=True, mov\_export=True, txti\_export=True, txte\_export=True, script\_export=True, optimize\_file=False, blib=False, txt\_embed=False, pretty\_print=False</i>**)**  
+* <a id="function-cycles-generate_xml"></a>*function* cycles\.**generate\_xml(**<i>asset, imgi\_export=True, imge\_export=True, seq\_export=True, mov\_export=True, txti\_export=True, txte\_export=True, script\_export=True, optimize\_file=False, blib=False, txt\_embed=False, pretty\_print=False</i>**)**  
   Generate XML representing a Cycles material or node group as per the Blib standard\.  
 
   **Arguments:**
-  * <code>**object** \(*bpy\.types\.Material* or *bpy\.types\.ShaderNodeTree*\)</code>: The object to be exported,
+  * <code>**asset** \(*bpy\.types\.Material* or *bpy\.types\.ShaderNodeTree*\)</code>: The asset to be exported,
 has to be Cycles object, no other renderers supported\.
   * <code>**imgi\_export** \(*bool*\)</code>: Export images that are packed in \.blend file\.
   * <code>**imge\_export** \(*bool*\)</code>: Export images that are externally saved\.
@@ -113,5 +114,5 @@ should not be used if XML is to be part of a full \.blib file\.
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>\}\)</code>  
 
   **Raises:**
-  * <code>**blib\.exeptions\.InvalidObject**</code>: If the 'object' argument is not a Cycles material or node tree\.
+  * <code>**blib\.exeptions\.InvalidObject**</code>: If the 'asset' argument is not a Cycles material or node tree\.
 
