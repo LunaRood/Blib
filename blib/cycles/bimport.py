@@ -24,7 +24,7 @@ import bpy
 import re
 import zipfile as zf
 import xml.etree.cElementTree as ET
-from ast import literal_eval as parse
+from ast import literal_eval
 from os import path, listdir, makedirs, remove
 from shutil import copyfile, rmtree
 
@@ -106,20 +106,20 @@ def import_texts(orig, dest, xtxt, txts, failed, archive, txt_dir, txt_paths=Non
                         txt_paths[xtxt.attrib["path"]] = txt
                 tfile.close()
 
-def set_attributes(object, xelement, failed):
+def set_attributes(asset, xelement, failed):
     for attr in xelement.attrib:
         if not attr.startswith("blib_") and \
-           not (attr == "name" and isinstance(object, bpy.types.Material)) and \
-           not (attr == "mode" and isinstance(object, bpy.types.ShaderNodeScript)):
+           not (attr == "name" and isinstance(asset, bpy.types.Material)) and \
+           not (attr == "mode" and isinstance(asset, bpy.types.ShaderNodeScript)):
             try:
-                val = parse(xelement.attrib[attr])
+                val = literal_eval(xelement.attrib[attr])
             except (ValueError, SyntaxError):
                 val = xelement.attrib[attr]
             
             try:
-                setattr(object, attr, val)
+                setattr(asset, attr, val)
             except:
-                fail(failed, "attributes", "set attribute '{}' on object '{}'".format(attr, object.name))
+                fail(failed, "attributes", "set attribute '{}' on object '{}'".format(attr, asset.name))
 
 def make_sockets(tree, inp, out, xinpn, xoutn):
     types = ('VALUE', 'INT', 'BOOLEAN', 'VECTOR', 'STRING', 'RGBA', 'SHADER')
@@ -250,7 +250,7 @@ def build_tree(xnodes, xlinks, tree, resources, txt_embed, txt_dir, blib, script
                 set_attributes(node.image_user, ximageuser, failed)
         elif hasattr(node, "mapping") and hasattr(node.mapping, "curves"):
             xcurvedata = xnode.find("curve_data")
-            curvedata = parse(xcurvedata.text)
+            curvedata = literal_eval(xcurvedata.text)
             for c_i, curve in enumerate(curvedata):
                 for p_i, point in enumerate(curve):
                     if p_i == 0 or p_i == len(curve) - 1:
@@ -262,7 +262,7 @@ def build_tree(xnodes, xlinks, tree, resources, txt_embed, txt_dir, blib, script
             node.mapping.update()
         elif hasattr(node, "color_ramp"):
             xrampdata = xnode.find("ramp_data")
-            rampdata = parse(xrampdata.text)
+            rampdata = literal_eval(xrampdata.text)
             set_attributes(node.color_ramp, xrampdata, failed)
             for e_i, element in enumerate(rampdata):
                 if e_i == 0 or e_i == len(rampdata) - 1:

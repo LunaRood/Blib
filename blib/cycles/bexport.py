@@ -27,6 +27,7 @@ from os import path, listdir
 
 from .version import version, compatible
 from .generate_xml import generate_xml
+from .utils import check_asset
 from ..utils import archive_sha1, write
 from ..exceptions import InvalidObject
 
@@ -67,13 +68,13 @@ def find_range(files, val, lower):
             else:
                 return mid - 1
 
-def bexport(object, filepath, imgi_export=True, imge_export=True, seq_export=True, mov_export=True,
+def bexport(asset, filepath, imgi_export=True, imge_export=True, seq_export=True, mov_export=True,
         txti_export=True, txte_export=True, script_export=True, optimize_file=False, compress=True):
     """
     Export a Cycles material or node group to a .blib file.
     
     Args:
-        object (bpy.types.Material or bpy.types.ShaderNodeTree): The object to be exported,
+        asset (bpy.types.Material or bpy.types.ShaderNodeTree): The asset to be exported,
             has to be Cycles object, no other renderers supported.
         filepath (str): Path to save the file.
         imgi_export (bool): Export images that are packed in .blend file.
@@ -87,17 +88,13 @@ def bexport(object, filepath, imgi_export=True, imge_export=True, seq_export=Tru
         compress (bool): Use compression on the zip container.
     
     Raises:
-        blib.exeptions.InvalidObject: If the 'object' argument is not a Cycles material or node tree.
+        blib.exeptions.InvalidObject: If the 'asset' argument is not a Cycles material or node tree.
     """
     
-    if isinstance(object, bpy.types.Material):
-        if object.use_nodes == False:
-            raise InvalidObject("Material can't be exported, contains no node tree.")
-    elif isinstance(object, bpy.types.ShaderNodeTree):
-        raise InvalidObject("Object passed is not a material or node group")
+    check_asset(asset, True)
     
     filepath = bpy.path.abspath(filepath) #Ensure path is absolute
-    xml, imgs, txts = generate_xml(object, imgi_export, imge_export, seq_export, mov_export, txti_export,
+    xml, imgs, txts = generate_xml(asset, imgi_export, imge_export, seq_export, mov_export, txti_export,
                                    txte_export, script_export, optimize_file, True, False, False) #Generate XML
     compression = zf.ZIP_DEFLATED if compress else zf.ZIP_STORED
     archive = zf.ZipFile(filepath, 'w', compression) #Create archive
