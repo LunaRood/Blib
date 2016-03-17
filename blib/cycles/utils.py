@@ -1,6 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
-# Cycles import/export: Cycles IO using the Blib package.
+# Part of the Cycles sub-package of Blib.
+# Cycles Blib utilities: Common Cycles Blib functions.
 # Copyright (C) 2016  Luca Rood
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,6 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # ##### END GPL LICENSE BLOCK #####
+
+"""Utility functions for the Cycles Blib package."""
 
 import bpy
 
