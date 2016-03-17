@@ -12,9 +12,11 @@ Utility classes and functions for Blib packages\.
 * <code>utils\.[**archive\_sha1**](#function-utils-archive_sha1)</code>
 * <code>utils\.[**extract**](#function-utils-extract)</code>
 * <code>utils\.[**fail**](#function-utils-fail)</code>
+* <code>utils\.[**file\_is\_type**](#function-utils-file_is_type)</code>
 * <code>utils\.[**files\_equal**](#function-utils-files_equal)</code>
 * <code>utils\.[**gen\_crc**](#function-utils-gen_crc)</code>
 * <code>utils\.[**gen\_resource\_path**](#function-utils-gen_resource_path)</code>
+* <code>utils\.[**get\_file\_type**](#function-utils-get_file_type)</code>
 * <code>utils\.[**get\_path**](#function-utils-get_path)</code>
 * <code>utils\.[**is\_int**](#function-utils-is_int)</code>
 * <code>utils\.[**write**](#function-utils-write)</code>
@@ -94,6 +96,20 @@ Used to generate decorated string, for display purposes\.
 
 ---
 
+* <a id="function-utils-file_is_type"></a>*function* utils\.**file\_is\_type(**<i>f\_path, blib\_type</i>**)**  
+  Check if a file is of a given Blib type\.  
+
+  **Arguments:**
+  * <code>**f\_path** \(*str*\)</code>: Path to the file to be checked\.
+  * <code>**blib\_type** \(*str*\)</code>: The type against which the file will be checked\.
+
+  **Returns:**
+
+  <code>**bool**</code>  
+
+
+---
+
 * <a id="function-utils-files_equal"></a>*function* utils\.**files\_equal(**<i>file1, file2</i>**)**  
   Check if files contain same data\.  
 
@@ -127,6 +143,22 @@ otherwise equal files may seem different\.
   **Returns:**
 
   <code>**str**</code>: "&lt;module directory&gt;/resources"  
+
+
+---
+
+* <a id="function-utils-get_file_type"></a>*function* utils\.**get\_file\_type(**<i>f\_path, sub=False</i>**)**  
+  Get the Blib type of a file\.  
+
+  **Arguments:**
+  * <code>**f\_path** \(*str*\)</code>: Path to the file to be checked\.
+  * <code>**sub** \(*bool*\)</code>: If True, file will also be checked for subtype\.
+
+  **Returns:**
+
+  <code>**str**</code> or <code>**None**</code>  
+  A string containing the Blib type is returned,  
+  if no valid type is found, None is returned\.  
 
 
 ---
