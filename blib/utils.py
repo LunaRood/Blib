@@ -27,7 +27,6 @@ from hashlib import sha1
 from os import path, makedirs, listdir
 from shutil import copyfile, copyfileobj
 from io import BytesIO
-from importlib import import_module
 
 class Version(object):
     """
@@ -384,13 +383,12 @@ def gen_resource_path():
     res_path = path.join(res_path, "resources")
     return res_path
 
-def get_file_type(f_path, sub=False):
+def get_file_type(f_path):
     """
     Get the Blib type of a file.
     
     Args:
         f_path (str): Path to the file to be checked.
-        sub (bool): If True, file will also be checked for subtype.
     
     Returns:
         str or None
@@ -408,34 +406,5 @@ def get_file_type(f_path, sub=False):
     except ValueError:
         return None
     
-    if sub:
-        try:
-            sub = import_module("blib.{}.utils".format(blib_type)).get_sub_type(archive)
-        except (ImportError, AttributeError):
-            pass
-        else:
-            if sub is None:
-                return None
-            blib_type += "_" + sub
-    
     archive.close()
     return blib_type
-
-def file_is_type(f_path, blib_type):
-    """
-    Check if a file is of a given Blib type.
-    
-    Args:
-        f_path (str): Path to the file to be checked.
-        blib_type (str): The type against which the file will be checked.
-    
-    Returns:
-        bool
-    """
-    
-    if "_" in blib_type:
-        f_type = get_file_type(f_path, True)
-    else:
-        f_type = get_file_type(f_path)
-    
-    return f_type == blib_type

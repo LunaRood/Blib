@@ -24,7 +24,9 @@
 import bpy
 
 import xml.etree.cElementTree as ET
+import zipfile as zf
 from ..exceptions import InvalidObject
+from ..utils import get_file_type
 
 def check_asset(asset, do_raise=False):
     """
@@ -81,18 +83,23 @@ def check_asset(asset, do_raise=False):
                     groups.append(node.node_tree)
     return True
 
-def get_sub_type(archive):
+def get_sub_type(f_path):
     """
     Get the subtype of a 'cycles' type Blib file.
     
     Args:
-        archive (zipfile.ZipFile): The archive to be checked.
+        f_path (str): Path to the file to be checked.
     
     Returns:
         str or None
         A string containing the Blib sub-type is returned,
         if no valid sub-type is found, None is returned.
     """
+    
+    try:
+        archive = zf.ZipFile(f_path, 'r')
+    except zf.BadZipFile:
+        return None
     
     try:
         xml_file = archive.open("structure.xml", 'r')
@@ -111,3 +118,12 @@ def get_sub_type(archive):
     if xroot.find("resources") is not None:
         return "grp"
     return None
+
+def check_file(f_path, sub=None):
+    if get_file_type(f_path) == "cycles":
+        if sub is not None:
+            return get_sub_type(f_path) == sub
+        else:
+            return True
+    else:
+        return False
