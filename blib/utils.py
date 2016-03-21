@@ -25,7 +25,7 @@ import zipfile as zf
 from binascii import crc32
 from hashlib import sha1
 from os import path, makedirs, listdir
-from shutil import copyfile, copyfileobj
+from shutil import copyfileobj
 from io import BytesIO
 
 class Version(object):

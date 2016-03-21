@@ -29,7 +29,6 @@ from .version import version, compatible
 from .generate_xml import generate_xml
 from .utils import check_asset
 from ..utils import archive_sha1, write
-from ..exceptions import InvalidObject
 
 def file_int(f):
     return int(re.sub(r".*?([0-9]+)$", r"\1", f))

@@ -26,7 +26,6 @@ from os import path
 
 from .version import version, compatible
 from .utils import check_asset
-from ..exceptions import InvalidObject
 from ..utils import fail
 
 ##### Pretty print code by Fredrik Lundh. Source: http://effbot.org/zone/element-lib.htm#prettyprint #####
