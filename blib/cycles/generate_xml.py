@@ -163,8 +163,9 @@ def generate_xml(asset, imgi_export=True, imge_export=True, seq_export=True, mov
         script_export (bool): Export scripts that are referenced by path in "script" node.
         optimize_file (bool): Optimize file, by not including variables qual to None or "".
         blib (bool): True only if XML is to be part of a full .blib file.
-        txte_embed (bool): Embed externally saved text files into .blib file,
-            should not be used if XML is to be part of a full .blib file.
+        txt_embed (bool or None): Embed text files into XML structure. True to embed all,
+            False save all externally (in .blib), and None to embed only internal texts.
+            Should only be True if XML is **not** to be part of a full .blib file.
         pretty_print (bool): Format XML to improve readability (increases file size),
             should only be used if XML is going to be read by a Human,
             should not be used if XML is to be part of a full .blib file.
