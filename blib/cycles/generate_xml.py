@@ -225,12 +225,12 @@ def generate_xml(asset, imgi_export=True, imge_export=True, seq_export=True, mov
                     if txt_export and node.script is not None:
                         export = False
                         if node.script.filepath == "" or not path.isfile(bpy.path.abspath(node.script.filepath)):
-                            if txti_export:
+                            if txti_export and (blib or txt_embed != False):
                                 export = True
                                 if node.script not in texts:
                                     texts[node.script] = "internal"
                         else:
-                            if txte_export and (blib or txte_embed):
+                            if txte_export and (blib or txt_embed == True):
                                 export = True
                                 if node.script not in texts:
                                     texts[node.script] = "external"
@@ -248,12 +248,12 @@ def generate_xml(asset, imgi_export=True, imge_export=True, seq_export=True, mov
                 if txt_export and node.text is not None:
                     export = False
                     if node.text.filepath == "" or not path.isfile(bpy.path.abspath(node.text.filepath)):
-                        if txti_export:
+                        if txti_export and (blib or txt_embed != False):
                             export = True
                             if node.text not in texts:
                                 texts[node.text] = "internal"
                     else:
-                        if txte_export and (blib or txte_embed):
+                        if txte_export and (blib or txt_embed == True):
                             export = True
                             if node.text not in texts:
                                 texts[node.text] = "external"
