@@ -1,4 +1,4 @@
-#Blib
+# Blib
 Blib is a Python library (and the name of the file standard it follows) for usage with Blender 3D, which enables you to export Blender assets to a standalone .blib file, and import them back for later usage.
 
 Currently the blib package only contains a cycles subpackage, thus can only deal with Cycles material assets. But the file format was designed to accommodate any blender asset type, so it is just a matter of writing more subpackages following the same Blib standard.
@@ -14,8 +14,8 @@ Currently the blib package only contains a cycles subpackage, thus can only deal
   * [Developing Blib subpackages](#developing-blib-subpackages)
 * [Asset types](#asset-types)
 
-##Getting started
-###Important notes
+## Getting started
+### Important notes
 0. Blib is **not** a Blender addon, but a library to be used by addons. There is currently no released addon that uses this library, but I will be releasing a simple import/export one as soon as I can, and the inclusion of this library in existing addons is being discussed. So if you want to use the Blib file standard to store you Blender assets, you can do one of three things:
   * Wait for the release of an addon that supports this library.
   * Use the library from the Blender Python Console. (Explained bellow)
@@ -25,15 +25,15 @@ Currently the blib package only contains a cycles subpackage, thus can only deal
 
 0. Blib has been tested in Blender v2.76, and earlier versions are not supported. If you encounter issues using an earlier version of Blender, it is recommended that you update to the latest version. If the issues persist, please refer to [reporting issues](#reporting-issues) for more information on how to file an issue report.
 
-###Getting Blib
+### Getting Blib
 You can download the latest version of Blib as a .zip of .tar.gz archive at the [releases page](../../releases).
 
 It is important to download from the [releases page](../../releases), and **not** directly from the repository in its current state, as it reflects a development state, and is not required to be in a working condition.
 
-###Using Blib
+### Using Blib
 Here I will cover both how to use Blib within your addon, and how to use it as a standalone command line utility.
 
-####Use Blib in your addon
+#### Use Blib in your addon
 To use the Blib library in your addon, you can just extract the downloaded archive (.zip or .tar.gz), and copy the "blib" directory into your addon's root directory.
 
 The "blib" directory is a Python package that may contain multiple subpackages (one for each supported asset type). You may optionally delete any **subpackage** that your addon is not going to use, to make its distribution more compact. However, be warned that all **modules** within the root of the blib package, are critical for its operation, and thus will almost certainly generate errors if deleted.
@@ -62,7 +62,7 @@ bimport(path) # Only the required argument is passed, so the default options wil
 
 It is recommended however, that you familiarize yourself with all the options these functions provide, by reading the API references for [bimport](doc/blib/cycles/__init__.md#function-cycles-bimport) and [bexport](doc/blib/cycles/__init__.md#function-cycles-bexport)
 
-####Use Blib from the Blender Python Console
+#### Use Blib from the Blender Python Console
 The first thing you have to do, is make to the blib package available to Blender. To do that you just extract the downloaded archive (.zip or .tar.gz), and copy the "blib" directory into your Blender modules directory:
 
 |OS|Directory|
@@ -98,13 +98,13 @@ And this command to import a material with all the default options (to learn all
 bimport("path_to_file_directory/filename.blib")
 ```
 
-##Contributing
+## Contributing
 You can contribute to Blib in several ways:
 * Testing Blib, and [report any issues you find](#reporting-issues).
 * [Developing addons using Blib](#use-blib-in-your-addon), to help bring it to the users and popularize the standard.
 * [Develop additional subpackages](#developing-blib-subpackages), to enable Blib to deal with more asset types. (Not yet possible)
 
-###Reporting issues
+### Reporting issues
 If you encounter a bug or issue with Blib, before reporting it make sure you are using the latest released version of blib (you can check the latest version on the [releases page](../../releases)), and Blender version 2.76 or later, as no previous versions are officially supported.
 
 Once you verified all of the above, you can head to the [issues page](../../issues), and click the "New issue" button.  
@@ -127,10 +127,10 @@ Now the only thing that is left, is to add the "bug" label to the issue.
 
 You can also request a feature, by doing the same as above, but just describing the feature instead of writing the shown info, and by swapping the "bug" label for a "feature" label.
 
-###Developing Blib subpackages
+### Developing Blib subpackages
 It is not currently possible for you to develop Blib subpackages, as despite of the API being fully documented, the file standard is not.
 
-##Asset types
+## Asset types
 |Blib codename|Asset type description|
 |:---|:---|
-|cycles|Any object of type 'bpy.types.Material', that is specifically a Cycles material.|
+|cycles|Any object of type 'bpy.types.Material' or 'bpy.types.ShaderNodeTree', that is specifically a Cycles material or node group.|
