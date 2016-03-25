@@ -122,7 +122,7 @@ def set_attributes(asset, xelement, failed):
                 fail(failed, "attributes", "set attribute '{}' on object '{}'".format(attr, asset.name))
 
 def make_sockets(tree, inp, out, xinpn, xoutn):
-    types = ('VALUE', 'INT', 'BOOLEAN', 'VECTOR', 'STRING', 'RGBA', 'SHADER')
+    types = ['VALUE', 'INT', 'BOOLEAN', 'VECTOR', 'STRING', 'RGBA', 'SHADER']
     routes = {}
     outs = {}
     
@@ -143,9 +143,9 @@ def make_sockets(tree, inp, out, xinpn, xoutn):
         xouts = xinpn.find("outputs")
         if xouts is not None:
             for i, xout in enumerate(xouts):
-                tree.links.new(inp.outputs[i + 7], routes[xout.attrib["type"]].inputs[0])
+                tree.links.new(inp.outputs[i + len(types)], routes[xout.attrib["type"]].inputs[0])
                 tree.links.new(outs[xout.attrib["type"]], routes[xout.attrib["type"]].inputs[0])
-                tree.inputs[i + 7].name = xout.attrib["name"]
+                tree.inputs[i + len(types)].name = xout.attrib["name"]
     
     if xoutn is not None:
         xinps = xoutn.find("inputs")
