@@ -120,6 +120,19 @@ def get_sub_type(f_path):
     return None
 
 def check_file(f_path, sub=None):
+    """
+    Check if file is a 'cycles' type blib file.
+    Optionally check if file is of a specific subtype.
+    
+    Args:
+        f_path (str): Path to the file to be checked.
+        sub (str or None): If a str is provided, it should be the subtype to check against,
+            if None is given, no subtype check is performed.
+    
+    Returns:
+        bool: True if the file is of type 'cycles', and if it matches the optional subtype.
+    """
+    
     if get_file_type(f_path) == "cycles":
         if sub is not None:
             return get_sub_type(f_path) == sub
