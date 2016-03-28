@@ -105,7 +105,7 @@ You can contribute to Blib in several ways:
 * [Develop additional subpackages](#developing-blib-subpackages), to enable Blib to deal with more asset types. (Not yet possible)
 
 ### Reporting issues
-If you encounter a bug or issue with Blib, before reporting it make sure you are using the latest released version of blib (you can check the latest version on the [releases page](../../releases)), and Blender version 2.76 or later, as no previous versions are officially supported.
+If you encounter a bug or issue with Blib, before reporting it make sure you are using the latest released version of Blib (you can check the latest version on the [releases page](../../releases)), and Blender version 2.76 or later, as no previous versions are officially supported.
 
 Once you verified all of the above, you can head to the [issues page](../../issues), and click the "New issue" button.  
 Start by giving it a short and descriptive title. Then you write your report in the following format, replacing the fields with the appropriate info:
