@@ -1,18 +1,17 @@
-#[blib](__init__.md)[\.utils](utils.md)
+# [blib](__init__.md)[\.utils](utils.md)
 
 **Source code:** [blib/utils\.py](../../blib/utils.py)
 
 Utility classes and functions for Blib packages\.  
 
-####[Classes](#classes-1)
+#### [Classes](#classes-1)
 * <code>utils\.[**ResourceDir**](#class-utils-ResourceDir)</code>
 * <code>utils\.[**Version**](#class-utils-Version)</code>
 
-####[Functions](#functions-1)
+#### [Functions](#functions-1)
 * <code>utils\.[**archive\_sha1**](#function-utils-archive_sha1)</code>
 * <code>utils\.[**extract**](#function-utils-extract)</code>
 * <code>utils\.[**fail**](#function-utils-fail)</code>
-* <code>utils\.[**file\_is\_type**](#function-utils-file_is_type)</code>
 * <code>utils\.[**files\_equal**](#function-utils-files_equal)</code>
 * <code>utils\.[**gen\_crc**](#function-utils-gen_crc)</code>
 * <code>utils\.[**gen\_resource\_path**](#function-utils-gen_resource_path)</code>
@@ -21,188 +20,173 @@ Utility classes and functions for Blib packages\.
 * <code>utils\.[**is\_int**](#function-utils-is_int)</code>
 * <code>utils\.[**write**](#function-utils-write)</code>
 
-##Classes
+## Classes
 * <a id="class-utils-ResourceDir"></a>*class* utils\.**ResourceDir(**<i>name, directory=None</i>**)**  
-  Keeps initialized path available, but only creates directory when the path is requested\.  
-    
-  Using str\(instance\) will create the directory \(if necessary\), and return the path\.  
-    
-  When truth checking an instance, it will be True only if the path has been requested  
-  and thus the directory created, otherwise it is False\.  
+    Keeps initialized path available, but only creates directory when the path is requested\.  
 
-  **Arguments:**
-  * <code>**name** \(*str*\)</code>: Name of the resource type\.
-  * <code>**directory** \(*str* or *None*\)</code>: Path to resource directory\.
+    Using str\(instance\) will create the directory \(if necessary\), and return the path\.  
 
-  **Attributes:**
-  * <code>ResourceDir\.**root** \(*read*\-*only*\[*str*\]\)</code>: Path to the root directory for the resource type\.
+    When truth checking an instance, it will be True only if the path has been requested  
+    and thus the directory created, otherwise it is False\.  
+
+    **Arguments:**
+    * <code>**name** \(*str*\)</code>: Name of the resource type\.
+    * <code>**directory** \(*str* or *None*\)</code>: Path to resource directory\.
+
+    **Attributes:**
+    * <code>ResourceDir\.**root** \(*read*\-*only*\[*str*\]\)</code>: Path to the root directory for the resource type\.
 
 
 ---
 
 * <a id="class-utils-Version"></a>*class* utils\.**Version(**<i>version, rel\_type=None</i>**)**  
-  Version control object\.  
-    
-  Creates multi\-part version number functionality\.  
-  Using str\(instance\) returns a string containing dot separated numbers\.  
+    Version control object\.  
 
-  **Arguments:**
-  * <code>**version** \(*str*\)</code>: Dot separated integer string \(e\.g\. "1\.0\.2"\)
-  * <code>**rel\_type** \(*str*\)</code>: Release type \(e\.g\. "beta", "stable", etc\.\)\.
-Used to generate decorated string, for display purposes\.
+    Creates multi\-part version number functionality\.  
+    Using str\(instance\) returns a string containing dot separated numbers\.  
 
-  **Attributes:**
-  * <code>Version\.**decorated** \(*str*\)</code>: Decorated string, in format "&lt;dot separated version number&gt; \(&lt;rel\_type&gt;\)" \(e\.g\. "1\.0\.2 \(stable\)"\)\.
+    **Arguments:**
+    * <code>**version** \(*str*\)</code>: Dot separated integer string \(e\.g\. "1\.0\.2"\)
+    * <code>**rel\_type** \(*str*\)</code>: Release type \(e\.g\. "beta", "stable", etc\.\)\.
+        Used to generate decorated string, for display purposes\.
 
-##Functions
+    **Attributes:**
+    * <code>Version\.**decorated** \(*str*\)</code>: Decorated string, in format "&lt;dot separated version number&gt; \(&lt;rel\_type&gt;\)" \(e\.g\. "1\.0\.2 \(stable\)"\)\.
+
+## Functions
 * <a id="function-utils-archive_sha1"></a>*function* utils\.**archive\_sha1(**<i>archive</i>**)**  
-  Generate sha1 hash from crc32 hashes of all files in archive\.  
+    Generate sha1 hash from crc32 hashes of all files in archive\.  
 
-  **Arguments:**
-  * <code>**archive** \(*zipfile\.ZipFile*\)</code>: The archive for which to generate the hash\.
+    **Arguments:**
+    * <code>**archive** \(*zipfile\.ZipFile*\)</code>: The archive for which to generate the hash\.
 
-  **Returns:**
+    **Returns:**
 
-  <code>**hashlib\.sha1**</code>: The resulting hash object\.  
+    <code>**hashlib\.sha1**</code>: The resulting hash object\.  
 
 
 ---
 
 * <a id="function-utils-extract"></a>*function* utils\.**extract(**<i>archive, item, directory</i>**)**  
-  Extract item from ZIP archive, without keeping internal ZIP structure, and resolving references\.  
+    Extract item from ZIP archive, without keeping internal ZIP structure, and resolving references\.  
 
-  **Arguments:**
-  * <code>**archive** \(*zipfile\.ZipFile*\)</code>: The archive from which to extract the item\.
-  * <code>**item** \(*str*\)</code>: The path to the item inside the archive\.
-  * <code>**directory** \(*str*\)</code>: The path to the directory to which to extract\.
+    **Arguments:**
+    * <code>**archive** \(*zipfile\.ZipFile*\)</code>: The archive from which to extract the item\.
+    * <code>**item** \(*str*\)</code>: The path to the item inside the archive\.
+    * <code>**directory** \(*str*\)</code>: The path to the directory to which to extract\.
 
-  **Returns:**
+    **Returns:**
 
-  <code>**str**</code>: Path to the extracted file\.  
+    <code>**str**</code>: Path to the extracted file\.  
 
 
 ---
 
 * <a id="function-utils-fail"></a>*function* utils\.**fail(**<i>failed, f\_type, action</i>**)**  
-  Increment fail counter and print fail to console\.  
+    Increment fail counter and print fail to console\.  
 
-  **Arguments:**
-  * <code>**failed** \(*dict*\)</code>: Dictionary of fail counters\.
-  * <code>**f\_type** \(*str*\)</code>: The type of fail occurred \(must be same as corresponding key in failed dict\)\.
-  * <code>**action** \(*str*\)</code>: Action that failed \(e\.g\. "import", "export", "link"\.\.\.\)
-  * <code>**name** \(*str*\)</code>: Name of the object on which the action failed\.
-  * <code>**reason** \(*str*\)</code>: Reason for which the action failed \(e\.g\. "a &lt;some resource&gt; is missing"\)
-
-
----
-
-* <a id="function-utils-file_is_type"></a>*function* utils\.**file\_is\_type(**<i>f\_path, blib\_type</i>**)**  
-  Check if a file is of a given Blib type\.  
-
-  **Arguments:**
-  * <code>**f\_path** \(*str*\)</code>: Path to the file to be checked\.
-  * <code>**blib\_type** \(*str*\)</code>: The type against which the file will be checked\.
-
-  **Returns:**
-
-  <code>**bool**</code>  
+    **Arguments:**
+    * <code>**failed** \(*dict*\)</code>: Dictionary of fail counters\.
+    * <code>**f\_type** \(*str*\)</code>: The type of fail occurred \(must be same as corresponding key in failed dict\)\.
+    * <code>**action** \(*str*\)</code>: Action that failed \(e\.g\. "import", "export", "link"\.\.\.\)
+    * <code>**name** \(*str*\)</code>: Name of the object on which the action failed\.
+    * <code>**reason** \(*str*\)</code>: Reason for which the action failed \(e\.g\. "a &lt;some resource&gt; is missing"\)
 
 
 ---
 
 * <a id="function-utils-files_equal"></a>*function* utils\.**files\_equal(**<i>file1, file2</i>**)**  
-  Check if files contain same data\.  
+    Check if files contain same data\.  
 
-  **Arguments:**
-  * <code>**file1**, **file2** \(*file* *object*\)</code>: Files should be loaded in the same mode \(i\.e\. binary or text\),
-otherwise equal files may seem different\.
+    **Arguments:**
+    * <code>**file1**, **file2** \(*file* *object*\)</code>: Files should be loaded in the same mode \(i\.e\. binary or text\),
+        otherwise equal files may seem different\.
 
-  **Returns:**
+    **Returns:**
 
-  <code>**bool**</code>  
+    <code>**bool**</code>  
 
 
 ---
 
 * <a id="function-utils-gen_crc"></a>*function* utils\.**gen\_crc(**<i>filepath</i>**)**  
-  Generate crc32 hash, without loading whole file to disk\.  
+    Generate crc32 hash, without loading whole file to disk\.  
 
-  **Arguments:**
-  * <code>**filepath** \(*str*\)</code>: Path to file to be hashed\.
+    **Arguments:**
+    * <code>**filepath** \(*str*\)</code>: Path to file to be hashed\.
 
-  **Returns:**
+    **Returns:**
 
-  <code>**int**</code>: crc32 hash in decimal form\.  
+    <code>**int**</code>: crc32 hash in decimal form\.  
 
 
 ---
 
 * <a id="function-utils-gen_resource_path"></a>*function* utils\.**gen\_resource\_path(**<i></i>**)**  
-  Generate path to resources relative to the module path\.  
+    Generate path to resources relative to the module path\.  
 
-  **Returns:**
+    **Returns:**
 
-  <code>**str**</code>: "&lt;module directory&gt;/resources"  
+    <code>**str**</code>: "&lt;module directory&gt;/resources"  
 
 
 ---
 
-* <a id="function-utils-get_file_type"></a>*function* utils\.**get\_file\_type(**<i>f\_path, sub=False</i>**)**  
-  Get the Blib type of a file\.  
+* <a id="function-utils-get_file_type"></a>*function* utils\.**get\_file\_type(**<i>f\_path</i>**)**  
+    Get the Blib type of a file\.  
 
-  **Arguments:**
-  * <code>**f\_path** \(*str*\)</code>: Path to the file to be checked\.
-  * <code>**sub** \(*bool*\)</code>: If True, file will also be checked for subtype\.
+    **Arguments:**
+    * <code>**f\_path** \(*str*\)</code>: Path to the file to be checked\.
 
-  **Returns:**
+    **Returns:**
 
-  <code>**str**</code> or <code>**None**</code>  
-  A string containing the Blib type is returned,  
-  if no valid type is found, None is returned\.  
+    <code>**str**</code> or <code>**None**</code>  
+    A string containing the Blib type is returned,  
+    if no valid type is found, None is returned\.  
 
 
 ---
 
 * <a id="function-utils-get_path"></a>*function* utils\.**get\_path(**<i>archive, item</i>**)**  
-  Resolve reference chain\.  
+    Resolve reference chain\.  
 
-  **Arguments:**
-  * <code>**archive** \(*zipfile\.ZipFile*\)</code>: The archive wherein the file is located\.
-  * <code>**item** \(*str*\)</code>: The path to the item inside the archive\.
+    **Arguments:**
+    * <code>**archive** \(*zipfile\.ZipFile*\)</code>: The archive wherein the file is located\.
+    * <code>**item** \(*str*\)</code>: The path to the item inside the archive\.
 
-  **Returns:**
+    **Returns:**
 
-  <code>**str**</code>: Path to the file within the archive\.  
+    <code>**str**</code>: Path to the file within the archive\.  
 
 
 ---
 
 * <a id="function-utils-is_int"></a>*function* utils\.**is\_int(**<i>string</i>**)**  
-  Check if string is integer \(strict check\)\.  
+    Check if string is integer \(strict check\)\.  
 
-  **Arguments:**
-  * <code>**string** \(*str*\)</code>: string to be checked
+    **Arguments:**
+    * <code>**string** \(*str*\)</code>: string to be checked
 
-  **Returns:**
+    **Returns:**
 
-  <code>**bool**</code>  
+    <code>**bool**</code>  
 
 
 ---
 
 * <a id="function-utils-write"></a>*function* utils\.**write(**<i>archive, source, destination, crcs</i>**)**  
-  Write data to archive, while only making a link if identical data is already in archive\.  
+    Write data to archive, while only making a link if identical data is already in archive\.  
 
-  **Arguments:**
-  * <code>**archive** \(*zipfile\.ZipFile*\)</code>: The archive to which to write the data\.
-  * <code>**source** \(*str* or *bytes*\)</code>: The path to the file to be written or the data itself\.
-If source is 'str', it is interpreted as a file path\.
-If source is 'bytes', it is interpreted as data to be written directly\.
-  * <code>**destination** \(*str*\)</code>: The path within the archive to which the data should written\.
-  * <code>**crcs** \(*dict*\)</code>: A dictionary containing crc32 hashes to all files in archive\.
-Can be passed as an empty dictionary\.
-Same dict should be passed every time you write to the same archive\.
+    **Arguments:**
+    * <code>**archive** \(*zipfile\.ZipFile*\)</code>: The archive to which to write the data\.
+    * <code>**source** \(*str* or *bytes*\)</code>: The path to the file to be written or the data itself\.
+        If source is 'str', it is interpreted as a file path\.
+        If source is 'bytes', it is interpreted as data to be written directly\.
+    * <code>**destination** \(*str*\)</code>: The path within the archive to which the data should written\.
+    * <code>**crcs** \(*dict*\)</code>: A dictionary containing crc32 hashes to all files in archive\.
+        Can be passed as an empty dictionary\.
+        Same dict should be passed every time you write to the same archive\.
 
-  **Raises:**
-  * <code>**TypeError**</code>: If the 'source' argument is not a 'str' or 'bytes' object\.
+    **Raises:**
+    * <code>**TypeError**</code>: If the 'source' argument is not a 'str' or 'bytes' object\.
 

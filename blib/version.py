@@ -28,4 +28,4 @@ Attributes:
 
 from .utils import Version
 
-version = Version("0.1.4", "beta")
+version = Version("0.1.5", "beta")

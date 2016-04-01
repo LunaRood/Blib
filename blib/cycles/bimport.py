@@ -26,7 +26,7 @@ import zipfile as zf
 import xml.etree.cElementTree as ET
 from ast import literal_eval
 from os import path, listdir, makedirs, remove
-from shutil import copyfile, rmtree
+from shutil import rmtree
 
 from .version import version
 from ..utils import files_equal, archive_sha1, fail, extract, get_path
@@ -122,7 +122,7 @@ def set_attributes(asset, xelement, failed):
                 fail(failed, "attributes", "set attribute '{}' on object '{}'".format(attr, asset.name))
 
 def make_sockets(tree, inp, out, xinpn, xoutn):
-    types = ('VALUE', 'INT', 'BOOLEAN', 'VECTOR', 'STRING', 'RGBA', 'SHADER')
+    types = ['VALUE', 'INT', 'BOOLEAN', 'VECTOR', 'STRING', 'RGBA', 'SHADER']
     routes = {}
     outs = {}
     
@@ -132,10 +132,10 @@ def make_sockets(tree, inp, out, xinpn, xoutn):
         link = tree.links.new(inp.outputs[i], route.inputs[0])
         tree.links.remove(link)
         inp.outputs[i].type = ty
-        link = tree.links.new(inp.outputs[i], route.inputs[0])
+        tree.links.new(inp.outputs[i], route.inputs[0])
         if ty == "VECTOR":
             route.inputs[0].hide_value = True
-        link2 = tree.links.new(inp.outputs[i + 1], routes[ty].inputs[0])
+        tree.links.new(inp.outputs[i + 1], routes[ty].inputs[0])
         tree.inputs.remove(tree.inputs[i])
         outs[ty] = inp.outputs[i]
     
@@ -143,9 +143,9 @@ def make_sockets(tree, inp, out, xinpn, xoutn):
         xouts = xinpn.find("outputs")
         if xouts is not None:
             for i, xout in enumerate(xouts):
-                tree.links.new(inp.outputs[i + 7], routes[xout.attrib["type"]].inputs[0])
+                tree.links.new(inp.outputs[i + len(types)], routes[xout.attrib["type"]].inputs[0])
                 tree.links.new(outs[xout.attrib["type"]], routes[xout.attrib["type"]].inputs[0])
-                tree.inputs[i + 7].name = xout.attrib["name"]
+                tree.inputs[i + len(types)].name = xout.attrib["name"]
     
     if xoutn is not None:
         xinps = xoutn.find("inputs")

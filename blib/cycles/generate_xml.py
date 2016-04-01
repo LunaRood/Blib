@@ -26,7 +26,6 @@ from os import path
 
 from .version import version, compatible
 from .utils import check_asset
-from ..exceptions import InvalidObject
 from ..utils import fail
 
 ##### Pretty print code by Fredrik Lundh. Source: http://effbot.org/zone/element-lib.htm#prettyprint #####
@@ -164,8 +163,9 @@ def generate_xml(asset, imgi_export=True, imge_export=True, seq_export=True, mov
         script_export (bool): Export scripts that are referenced by path in "script" node.
         optimize_file (bool): Optimize file, by not including variables qual to None or "".
         blib (bool): True only if XML is to be part of a full .blib file.
-        txte_embed (bool): Embed externally saved text files into .blib file,
-            should not be used if XML is to be part of a full .blib file.
+        txt_embed (bool or None): Embed text files into XML structure. True to embed all,
+            False save all externally (in .blib), and None to embed only internal texts.
+            Should only be True if XML is **not** to be part of a full .blib file.
         pretty_print (bool): Format XML to improve readability (increases file size),
             should only be used if XML is going to be read by a Human,
             should not be used if XML is to be part of a full .blib file.
@@ -226,12 +226,12 @@ def generate_xml(asset, imgi_export=True, imge_export=True, seq_export=True, mov
                     if txt_export and node.script is not None:
                         export = False
                         if node.script.filepath == "" or not path.isfile(bpy.path.abspath(node.script.filepath)):
-                            if txti_export:
+                            if txti_export and (blib or txt_embed != False):
                                 export = True
                                 if node.script not in texts:
                                     texts[node.script] = "internal"
                         else:
-                            if txte_export and (blib or txte_embed):
+                            if txte_export and (blib or txt_embed == True):
                                 export = True
                                 if node.script not in texts:
                                     texts[node.script] = "external"
@@ -249,12 +249,12 @@ def generate_xml(asset, imgi_export=True, imge_export=True, seq_export=True, mov
                 if txt_export and node.text is not None:
                     export = False
                     if node.text.filepath == "" or not path.isfile(bpy.path.abspath(node.text.filepath)):
-                        if txti_export:
+                        if txti_export and (blib or txt_embed != False):
                             export = True
                             if node.text not in texts:
                                 texts[node.text] = "internal"
                     else:
-                        if txte_export and (blib or txte_embed):
+                        if txte_export and (blib or txt_embed == True):
                             export = True
                             if node.text not in texts:
                                 texts[node.text] = "external"
